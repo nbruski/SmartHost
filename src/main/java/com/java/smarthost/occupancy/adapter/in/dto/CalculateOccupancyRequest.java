@@ -15,6 +15,7 @@ import java.util.List;
 @Builder
 @Data
 public class CalculateOccupancyRequest {
+
     @Schema(description = "Number of available premium rooms")
     @NotEmpty
     private int noOfPremiumRooms;
@@ -26,4 +27,5 @@ public class CalculateOccupancyRequest {
     @Schema(description = "Prices which customers are willing to pay")
     @NotNull
     private List<Double> customerWillingPrice;
+
 }
