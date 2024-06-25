@@ -26,7 +26,6 @@ public class OccupancyCalculationServiceImpl implements OccupancyCalculationServ
         List<Double> premiumCustomers = new ArrayList<>();
         List<Double> economyCustomers = new ArrayList<>();
 
-        // Separate customers into premium and economy based on willingness to pay
         for (double payment : customerPayments) {
             if (payment >= 100) {
                 premiumCustomers.add(payment);
