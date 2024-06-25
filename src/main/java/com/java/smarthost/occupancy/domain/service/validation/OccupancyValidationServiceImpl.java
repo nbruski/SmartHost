@@ -16,7 +16,7 @@ import java.util.List;
 public class OccupancyValidationServiceImpl implements OccupancyValidationService {
     private final OccupancyRulesService occupancyRulesService;
     @Override
-    public void validateOccupancy(Occupancy occupancy) {
+    public void validateOccupancy(final Occupancy occupancy) {
         List<ValidationError> validationErrors = new ArrayList<>();
 
         validateCustomerWillingPrice(occupancy.getCustomerWillingPrice(), validationErrors);

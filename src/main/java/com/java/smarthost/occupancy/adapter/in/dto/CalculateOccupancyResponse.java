@@ -9,6 +9,6 @@ public class CalculateOccupancyResponse {
 
     private int noOfRooms;
 
-    private String income;
+    private double income;
 
 }

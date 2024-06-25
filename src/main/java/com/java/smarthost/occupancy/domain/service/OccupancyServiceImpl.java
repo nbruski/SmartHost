@@ -15,14 +15,9 @@ public class OccupancyServiceImpl implements OccupancyService {
     private final OccupancyCalculationService occupancyCalculationService;
 
     @Override
-    public BookedRoomsWithIncomeResponse calculateIncomeAndUsage(Occupancy occupancy) {
+    public BookedRoomsWithIncomeResponse calculateIncomeAndUsage(final Occupancy occupancy) {
         this.occupancyValidationService.validateOccupancy(occupancy);
-        return BookedRoomsWithIncomeResponse.builder()
-                .usageEconomy(this.occupancyCalculationService.calculateEconomyUsage(occupancy.getNoOfEconomyRooms(),
-                        occupancy.getCustomerWillingPrice()))
-                .usagePremium(this.occupancyCalculationService.calculatePremiumUsage(occupancy.getNoOfPremiumRooms(),
-                        occupancy.getCustomerWillingPrice()))
-                .build();
+        return this.occupancyCalculationService.calculateUsage(occupancy);
     }
 
 }

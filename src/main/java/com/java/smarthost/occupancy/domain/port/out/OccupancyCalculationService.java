@@ -1,13 +1,10 @@
 package com.java.smarthost.occupancy.domain.port.out;
 
-import com.java.smarthost.occupancy.adapter.in.dto.CalculateOccupancyResponse;
-
-import java.util.List;
+import com.java.smarthost.occupancy.adapter.in.dto.BookedRoomsWithIncomeResponse;
+import com.java.smarthost.occupancy.domain.model.Occupancy;
 
 public interface OccupancyCalculationService {
 
-    CalculateOccupancyResponse calculatePremiumUsage(int noOfPremiumRooms, List<Double> prices);
-
-    CalculateOccupancyResponse calculateEconomyUsage(int noOfEconomyRooms, List<Double> prices);
+    BookedRoomsWithIncomeResponse calculateUsage(Occupancy occupancy);
 
 }
