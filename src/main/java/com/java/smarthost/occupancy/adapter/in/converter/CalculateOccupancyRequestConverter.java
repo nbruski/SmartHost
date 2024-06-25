@@ -6,7 +6,7 @@ import org.mapstruct.Mapper;
 
 import static org.mapstruct.NullValueCheckStrategy.*;
 
-@Mapper(nullValueCheckStrategy = ALWAYS)
+@Mapper(componentModel = "spring", nullValueCheckStrategy = ALWAYS)
 public interface CalculateOccupancyRequestConverter {
     Occupancy toOccupancy(CalculateOccupancyRequest request);
 }
