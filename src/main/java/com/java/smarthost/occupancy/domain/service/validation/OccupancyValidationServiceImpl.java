@@ -14,7 +14,9 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class OccupancyValidationServiceImpl implements OccupancyValidationService {
+
     private final OccupancyRulesService occupancyRulesService;
+
     @Override
     public void validateOccupancy(final Occupancy occupancy) {
         List<ValidationError> validationErrors = new ArrayList<>();

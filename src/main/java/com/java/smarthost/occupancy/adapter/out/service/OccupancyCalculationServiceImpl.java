@@ -6,13 +6,11 @@ import com.java.smarthost.occupancy.domain.model.Occupancy;
 import com.java.smarthost.occupancy.domain.port.out.OccupancyCalculationService;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 @Service
 public class OccupancyCalculationServiceImpl implements OccupancyCalculationService {
-
 
     @Override
     public BookedRoomsWithIncomeResponse calculateUsage(final Occupancy occupancy) {
@@ -23,50 +21,37 @@ public class OccupancyCalculationServiceImpl implements OccupancyCalculationServ
     }
 
     private BookedRoomsWithIncomeResponse calculateBooking(int premiumRooms, int economyRooms, List<Double> customerPayments) {
-        List<Double> premiumCustomers = new ArrayList<>();
-        List<Double> economyCustomers = new ArrayList<>();
+        final List<Double> premiumCustomers = customerPayments.stream()
+                .filter(payment -> payment >= 100)
+                .sorted(Collections.reverseOrder())
+                .toList();
 
-        for (double payment : customerPayments) {
-            if (payment >= 100) {
-                premiumCustomers.add(payment);
-            } else {
-                economyCustomers.add(payment);
-            }
-        }
+        final List<Double> economyCustomers = customerPayments.stream()
+                .filter(payment -> payment < 100)
+                .sorted(Collections.reverseOrder())
+                .toList();
 
-        premiumCustomers.sort(Collections.reverseOrder());
-        economyCustomers.sort(Collections.reverseOrder());
-
-        int premiumRoomsOccupied = 0;
-        int economyRoomsOccupied = 0;
         double totalPremiumRevenue = 0;
+        int premiumRoomsOccupied = 0;
+
+        for (int i = 0; i < Math.min(premiumCustomers.size(), premiumRooms); i++) {
+            totalPremiumRevenue += premiumCustomers.get(i);
+            premiumRoomsOccupied++;
+        }
+
+        for (int i = 0; i < economyCustomers.size() && premiumRoomsOccupied < premiumRooms; i++) {
+            totalPremiumRevenue += economyCustomers.get(i);
+            premiumRoomsOccupied++;
+        }
+
         double totalEconomyRevenue = 0;
+        int economyRoomsOccupied = 0;
 
-        for (double payment : premiumCustomers) {
-            if (premiumRoomsOccupied < premiumRooms) {
-                premiumRoomsOccupied++;
-                totalPremiumRevenue += payment;
-            } else {
-                break;
-            }
-        }
+        final int remainingEconomyStartIndex = Math.max(0, premiumRooms - premiumCustomers.size());
 
-        for (double payment : economyCustomers) {
-            if (premiumRoomsOccupied < premiumRooms) {
-                premiumRoomsOccupied++;
-                totalPremiumRevenue += payment;
-            } else {
-                break;
-            }
-        }
-
-        for (double payment : economyCustomers) {
-            if (economyRoomsOccupied < economyRooms) {
-                economyRoomsOccupied++;
-                totalEconomyRevenue += payment;
-            } else {
-                break;
-            }
+        for (int i = remainingEconomyStartIndex; i < economyCustomers.size() && economyRoomsOccupied < economyRooms; i++) {
+            totalEconomyRevenue += economyCustomers.get(i);
+            economyRoomsOccupied++;
         }
 
         return BookedRoomsWithIncomeResponse.builder()
@@ -80,6 +65,4 @@ public class OccupancyCalculationServiceImpl implements OccupancyCalculationServ
                         .build())
                 .build();
     }
-
-
 }
